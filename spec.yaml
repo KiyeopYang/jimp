@@ -18,6 +18,10 @@ paths:
           in: query
         - name: resizeY
           in: query
+        - name: quality
+          in: query
+        - name: scale
+          in: query
       responses:
         "200":
           content:
