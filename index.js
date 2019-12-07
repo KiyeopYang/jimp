@@ -2,7 +2,7 @@ const express = require("express");
 const request = require("request");
 const path = require("path");
 const fs = require("fs");
-const sharp = require("sharp");
+const jimp = require("jimp");
 
 const PORT = 80;
 const app = express();
@@ -16,33 +16,29 @@ const download = function(uri, filename, callback) {
 };
 app.get("/", (req, res) => {
   try {
-    const { url, resizeX, resizeY } = req.query;
-
+    const { url, quality, scale, resizeX, resizeY } = req.query;
     const FILENAME = path.basename(url);
     const TEMP_FILENAME = `_${FILENAME}`;
     download(url, TEMP_FILENAME, async () => {
-      let temp = sharp(TEMP_FILENAME).rotate();
-      if (resizeX || resizeY) {
-        temp = temp.resize(
-          parseInt(resizeX) || null,
-          parseInt(resizeY) || null
-        );
-      }
-      // .resize(null, 200)
-      temp
-        .toFile(FILENAME)
-        .then(() => {
-          return res.download(FILENAME, FILENAME);
-        })
-        .then(() => {
-          setTimeout(() => {
-            fs.unlinkSync(FILENAME);
-            fs.unlinkSync(TEMP_FILENAME);
-          }, 30000);
-        })
-        .catch(e => {
-          res.status(400).json(e.message);
+      // let temp = sharp(TEMP_FILENAME).rotate();
+      let temp = jimp.read(TEMP_FILENAME).then(async temp => {
+        if (resizeX || resizeY) {
+          temp = temp.resize(
+            resizeX ? parseInt(resizeX) : jimp.AUTO,
+            resizeY ? parseInt(resizeY) : jimp.AUTO
+          );
+        }
+        if (quality) {
+          temp = temp.quality(Number(quality));
+        }
+        if (scale) {
+          temp = temp.scale(Number(scale));
+        }
+        // .resize(null, 200)
+        temp.write(FILENAME, result => {
+          res.download(FILENAME, FILENAME);
         });
+      });
     });
   } catch (e) {
     console.error(e);

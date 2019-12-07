@@ -6,4 +6,4 @@ COPY . .
 
 EXPOSE 80
 
-CMD [ "node", "index.js" ]
+CMD ["node", "index.js"]
