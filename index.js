@@ -17,7 +17,7 @@ const download = function(uri, filename, callback) {
 app.get("/", (req, res) => {
   try {
     const { url, quality, scale, resizeX, resizeY } = req.query;
-    const FILENAME = path.basename(url);
+    const FILENAME = path.basename(decodeURIComponent(url));
     const TEMP_FILENAME = `_${FILENAME}`;
     download(url, TEMP_FILENAME, async () => {
       // let temp = sharp(TEMP_FILENAME).rotate();
