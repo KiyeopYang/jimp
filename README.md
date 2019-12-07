@@ -3,3 +3,6 @@
 ### Project
 
 "# jimp"
+
+이미지 URL 쿼리 예시
+https://file-storage-in-korea.s3.ap-northeast-2.amazonaws.com/test/20191207_134352_001.jpg
