@@ -1,0 +1,35 @@
+openapi: 3.0.0
+
+info:
+  title: sharp
+  version: 0.0.1
+
+servers:
+  - url: https://endpoint.ainize.ai/kiyeopyang/sharp/
+
+paths:
+  /:
+    get:
+      parameters: # Set parameter values here
+        - name: url # Set parameter name
+          in: query # Select amongst query, header, path, and cookie
+          required: true
+        - name: resizeX
+          in: query
+        - name: resizeY
+          in: query
+      responses:
+        "200":
+          content:
+            applicatioin/json:
+              schema:
+                type: string
+                properties:
+                  result:
+                    type: string
+                    format: byte
+                    description: Base64-encoded contents of the avatar image
+        "400":
+          description: Bad Request Error
+        default:
+          description: Unexpected Error
